@@ -9,6 +9,7 @@
         </section>
     </aside>
     <div class="col-md-8">
+        <%= render 'follow_form' if logged_in? %>
         <% if @user.microposts.any? %>
             <h3>Microposts (<%= @user.microposts.count %>)</h3>
             <ol class="microposts">
@@ -17,22 +18,26 @@
         <% end %>
     </div>
 </div>
-<hr>
-<h2>プロフィール更新</h2>
-<%= form_for @user, :url => {:action => 'update'} do |f| %>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-    <%= f.label :email %>
-    <%= f.text_field :email %>
+
+<% if @current_user.id == params[:id].to_i %>
+
+    <hr>
+    <h2>プロフィール更新</h2>
+    <%= form_for @user, :url => {:action => 'update'} do |f| %>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+        <%= f.label :email %>
+        <%= f.text_field :email %>
     
-    <%= f.label :region %>
-    <%= f.text_field :region %>
+        <%= f.label :region %>
+        <%= f.text_field :region %>
     
     
-    <%= f.label :password %>
-    <%= f.password_field :password , class: 'form-control' %>
+        <%= f.label :password %>
+        <%= f.password_field :password , class: 'form-control' %>
                 
-    <%= f.label :password_confirmation, "Confirmation" %>
-    <%= f.password_field :password_confirmation , class: 'form-control' %>
-    <%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
+        <%= f.label :password_confirmation, "Confirmation" %>
+        <%= f.password_field :password_confirmation , class: 'form-control' %>
+        <%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
+    <% end %>
 <% end %>

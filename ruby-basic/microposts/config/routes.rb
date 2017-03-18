@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get 'sessions/new'
 
-  get 'static_pages/home'
+  # get 'static_pages/home'
 
   root to: 'static_pages#home'
   get 'signup',  to: 'users#new'
@@ -11,4 +11,5 @@ Rails.application.routes.draw do
   
   resources :users
   resources :microposts
+  resources :relationships, only: [:create, :destroy]
 end
