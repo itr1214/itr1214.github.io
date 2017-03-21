@@ -6,8 +6,19 @@
                 <%= gravatar_for @user %>
                 <%=  @user.name %>
             </h1>
+            <% if session[:user_id] == params[:id].to_i %>
+                <%= form_for @user, :url => {:action => 'update'} do |f| %>
+                    <%= f.text_area :hitokoto, :placeholder => "ひとこと"%>
+                    <%= f.submit "保存", class: "btn btn-large btn-primary" %>
+                <% end %>
+            <% else %>
+                <p><%= @user.hitokoto %></p>
+                
+            <% end %>
+            
         </section>
     </aside>
+    
     <div class="col-md-8">
         <%= render 'follow_form' if logged_in? %>
         <% if @user.microposts.any? %>
@@ -19,7 +30,7 @@
     </div>
 </div>
 
-<% if @current_user.id == params[:id].to_i %>
+<% if session[:user_id] == params[:id].to_i %>
 
     <hr>
     <h2>プロフィール更新</h2>
@@ -38,6 +49,6 @@
                 
         <%= f.label :password_confirmation, "Confirmation" %>
         <%= f.password_field :password_confirmation , class: 'form-control' %>
-        <%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
+        <%= f.submit "プロフィール更新", class: "btn btn-large btn-primary" %>
     <% end %>
 <% end %>

@@ -1,0 +1,12 @@
+<% @user_all.each do |user|%>
+    <div class="contener">
+        <div class="row">
+            <%= gravatar_for user %>
+            <p><%= user.name %></p>
+            
+        </div>
+        <div class"row">
+            <p><%= user.hitokoto %></p>
+        </div>
+    </div>
+<% end %>

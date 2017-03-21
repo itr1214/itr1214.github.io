@@ -1,0 +1,15 @@
+
+[1mFrom:[0m /home/ubuntu/workspace/ruby-basic/microposts/app/views/users/show.html.erb @ line 10 ActionView::CompiledTemplates#_app_views_users_show_html_erb___4026864096025139153_69944019206940:
+
+     [1;34m5[0m:                 <%= gravatar_for @user %>
+     [1;34m6[0m:                 <%=  @user.name %>
+     [1;34m7[0m:             </h1>
+     [1;34m8[0m:             
+     [1;34m9[0m:             <% binding.pry %>
+ => [1;34m10[0m:                 <%= form_for @user, :url => {:action => 'update'} do |f| %>
+    [1;34m11[0m:                     <%= f.text_area :hitokoto, :placeholder => "ひとこと"%>
+    [1;34m12[0m:                     <%= f.submit "保存", class: "btn btn-large btn-primary" %>
+    [1;34m13[0m:                 <% end %>
+    [1;34m14[0m:             
+    [1;34m15[0m:         </section>
+
