@@ -1,7 +1,34 @@
 class UsersController < ApplicationController
+   
    def show
       @user = User.find(params[:id])
+      @retweet =  current_user.tweet_items
+    #   binding.pry
+      
       @microposts = @user.microposts.order(created_at: :desc)
+    #   @microposts =  tweet + @retweet
+    #   binding.pry
+      
+    #   @microposts.push(@retweet)
+      
+    #   @microposts.each do |retweet|
+    #      @microposts = @user.microposts.where(retweet: nil)
+    #   end
+    
+    # @retweet_user.each do |f|
+    #     #リツイートされている場合
+    #     if !f.retweet.nil?
+    #         @retweet = Micropost.find(f.retweet)
+    #         # binding.pry
+            
+    #     end
+    # end
+    
+    
+    #   binding.pry
+    #   @microposts += @user.microposts.where(retweet: @microposts["retweet"].to_i)
+      
+      
    end
    
    def new
@@ -28,28 +55,38 @@ class UsersController < ApplicationController
          render 'show'
       end
    end
+   
     #フォローユーザー
   def followings
-    @followings_id = Relationship.where('follower_id = ?',params[:id])
-     @idArray = []
-     @count = 0
-     @followings_id.each do |ids| 
-        @idArray[@count] = [ids.followed_id]
-        @count += 1
-    end
-     select_users(@idArray)
+    @followings_users = current_user.following_users
   end
  
   # フォロワーユーザー
   def followers
-      @followers_id = Relationship.where('followed_id = ?',params[:id])
-      @idArray = []
-      @count = 0
-      @followers_id .each do |ids|
-        @idArray[@count] = [ids.follower_id]
-        @count += 1
-    end
-      select_users(@idArray)
+      @followers_users =  current_user.followers_users
+    #   binding.pry
+  end
+  
+  def favorite
+    @like = favarite_microposts
+    @like = current_user.favorite_user
+  end
+  
+  def retweet
+      content = current_user.retweet_user(retweet_params["micropost_id"])
+     retweet = current_user.microposts.build(content: content["content"] ,retweet: retweet_params["micropost_id"])
+    #  binding.pry
+     
+     # リツイートされているか確認
+     if current_user.retweet_conf(retweet_params["micropost_id"]).empty?
+        retweet.save
+        flash[:success] = "retweetしました。"
+    else
+        Micropost.delete_all(user_id: current_user.id, retweet: retweet_params["micropost_id"])
+        flash[:danger] = "retweet解除しました。"
+     end
+    #  binding.pryex
+     redirect_to root_path
   end
    
   private
@@ -64,9 +101,9 @@ class UsersController < ApplicationController
   end
   def select_users(ids)
       @followings_users = User.find(ids)
-    
   end
-  def followering_id_select(object)
-   
+  def retweet_params
+      params.permit(:micropost_id)
   end
+
 end

@@ -1,0 +1,11 @@
+<h1>お気に入り記事</h1>
+
+<div class="row">
+<% @like.each do |f|%>
+<% user = User.find(f.user_id) %>
+    <div class="col-md-3">
+        <%= f.content %>(<%= user.name %>)
+        
+    </div>
+<% end %>
+</div>

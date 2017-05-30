@@ -13,25 +13,27 @@
                 <% end %>
             <% else %>
                 <p><%= @user.hitokoto %></p>
-                
             <% end %>
-            
         </section>
     </aside>
-    
     <div class="col-md-8">
         <%= render 'follow_form' if logged_in? %>
         <% if @user.microposts.any? %>
             <h3>Microposts (<%= @user.microposts.count %>)</h3>
             <ol class="microposts">
+                
                 <%= render @microposts %>
+                
             </ol>
         <% end %>
     </div>
 </div>
 
 <% if session[:user_id] == params[:id].to_i %>
-
+    <%= link_to 'followings', "/users/followings/#{session[:user_id]}" %>
+    <%= link_to 'followers', "/users/followers/#{session[:user_id]}" %>
+    <%= link_to 'favorite', "/users/favorite/#{session[:user_id]}" %>
+    
     <hr>
     <h2>プロフィール更新</h2>
     <%= form_for @user, :url => {:action => 'update'} do |f| %>
@@ -42,7 +44,6 @@
     
         <%= f.label :region %>
         <%= f.text_field :region %>
-    
     
         <%= f.label :password %>
         <%= f.password_field :password , class: 'form-control' %>

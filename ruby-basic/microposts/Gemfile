@@ -41,6 +41,7 @@ group :development, :test do
   gem 'pry-stack_explorer' # スタックをたどれる
   gem 'hirb'
   gem 'hirb-unicode'
+  gem 'kaminari'
 end
 
 group :development do

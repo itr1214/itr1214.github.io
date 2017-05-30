@@ -1,6 +1,6 @@
-<h1>フォロワ一覧(<%= @followings_users.count %>)</h1>
+<h1>フォロワ一覧(<%= @followers_users.count %>)</h1>
 <div class="row">
-<% @followings_users.each do |f| %>
+<% @followers_users.each do |f| %>
     <div class="col-md-3">
         <%= gravatar_for f %>
         <p><a href="/users/<%= f.id %>"><%= f.name %></a></p>

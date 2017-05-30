@@ -7,12 +7,31 @@ class User < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
     validates :region,  length: { maximum: 20 }
     has_secure_password
-    has_many :microposts
+    has_many :microposts, class_name: "Micropost"
+    
     has_many :following_relationships, class_name:  "Relationship",
                                        foreign_key: "follower_id",
                                        dependent:   :destroy
+                                       
     has_many :following_users, through: :following_relationships, source: :followed
     
+    has_many :followers_relationships, class_name:  "Relationship",
+                                       foreign_key: "followed_id",
+                                       dependent:   :destroy
+                                       
+    has_many :followers_users, through: :followers_relationships, source: :follower
+    
+    has_many :favarites, class_name:  "Favorite",
+                         foreign_key: "user_id",
+                         dependent:   :destroy
+                         
+    has_many :favarite_microposts, through: :favarites, source: :micropost
+                         
+#   def favorite_user(other_user)
+#       favorite_relationships.find_or_create_by(user_id: other_user.id)
+#   end
+  
+  
      #他のユーザをフォローする
   def follow(other_user)
      following_relationships.find_or_create_by(followed_id: other_user.id)
@@ -27,4 +46,41 @@ class User < ActiveRecord::Base
   def following?(other_user)
      following_users.include?(other_user)
   end
+  
+  def feed_items
+     Micropost.where(user_id: following_user_ids + [self.id], retweet: nil)
+  end
+  
+  def tweet_items()
+     ids = microposts.where.not(retweet: nil).pluck(:retweet)
+     Micropost.find(ids)
+    #  Micropost.where.or(id: ids)
+    #  binding.pry
+     
+  end
+  def like_micropost(id)
+     Favorite.where(micropost_id: id)
+  end
+  def retweet_conf(micropost_id)
+      Micropost.where(retweet: micropost_id)
+  end
+  
+  def retweet_user(micropost_id)
+      Micropost.find(micropost_id)
+  end
+      
+  
+  
+  
+  
+  def favorite_user(other_user)
+    # favs = []
+    # favarits = other_user.favarites
+    # favarits.each do |fav|                                                                                                                                                    
+    #     microppos = fav.micropost
+    #     favs.append(microppos)    
+    # end  
+      Micropost.where(id: favarites.pluck(:micropost_id))
+  end
+  
 end

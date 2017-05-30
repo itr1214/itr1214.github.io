@@ -1,12 +1,43 @@
 <li id="micropost-<%= micropost.id %>">
+    
     <%= link_to gravatar_for(micropost.user, size: 50), micropost.user %>
     <span class="user"><%= link_to micropost.user.name, micropost.user %></span>
     <span class="content"><%= micropost.content %></span>
+    <% if micropost.retweet != nil%>
+    <% end%>
+    <% if current_user != micropost.user %>
+    
+        <%= form_for micropost , :url => {:controller => :favorites, :action => :create}, :method => :POST do |f| %>
+            <%= f.hidden_field :id, :value => micropost.id %>
+            <!--<%= f.hidden_field :user_id,:value => micropost.user_id %>-->
+            <% if !current_user.like_micropost(micropost.id).empty? %>
+                <%= f.submit  "favorite-release" , :class => "btn btn-danger" %>
+            <% else %>
+                <%= f.submit  "favorite" , :class =>  "btn btn-info" %>
+            <% end %>
+        <% end %>
+    
+        <!--<%= form_tag :controller => "favorites", :action => "create" do  %>-->
+            
+        <!--    <% @micropost.user_id = micropost.user_id %>-->
+        <!--    <% @micropost.id = micropost.id %>-->
+        <!--    <%= hidden_field :micropost,:id%>-->
+        <!--    <%= hidden_field :micropost,:user_id %>-->
+            
+        <!--    <% if !current_user.like_micropost(micropost.id).empty? %>-->
+        <!--        <%= submit_tag  "favorite-release" , :class => "btn btn-danger" %>-->
+        <!--    <% else %>-->
+        <!--    <%= submit_tag  "favorite" , :class =>  "btn btn-info" %>-->
+        <!--    <% end %>-->
+        <% end %>
+    <% end %>
+    
     <span class="timestamp">
         Posted <%= time_ago_in_words(micropost.created_at) %> ago.
         <% if current_user == micropost.user %>
             <%= link_to "delete", micropost, method: :delete, data: { confirm: "You sure?" } %>
+        <% else %>
+            <%= link_to "retweet", controller: "users", action: "retweet", micropost_id: micropost.id %>
         <% end %>
-        
     </span>
 </li>
